@@ -1,9 +1,9 @@
 import { useProductDispatch } from "../context/ProductContext.jsx";
 import { useState } from "react";
-import SearchByText from "../components/Product/SearchByText.jsx";
-import Spinner from "../components/Spinner.jsx";
+import SearchByText from "../components/Common/SearchByText.jsx";
+import Spinner from "../components/Common/Spinner.jsx";
 import ProductTable from "../components/Product/ProductTable.jsx";
-import Pagination from "../components/Pagination.jsx";
+import Pagination from "../components/Common/Pagination.jsx";
 import ProductModal from "../components/Product/ProductModal.jsx";
 import useProducts from "../hooks/useProducts.js";
 import { createProduct, deleteProduct, updateProduct } from "../services/Product.js";
@@ -16,7 +16,6 @@ function ProductManagement() {
         totalPages,
         currentPage,
         searchTerm,
-        categoryFilter, // Lấy bộ lọc danh mục
         loading,
         refreshProducts,
     } = useProducts();
@@ -30,12 +29,7 @@ function ProductManagement() {
     };
 
     // Lọc theo danh mục
-    const handleCategoryChange = (e) => {
-        const value = e.target.value;
-        dispatch({ type: 'SET_CATEGORY_FILTER', payload: value });
-    };
-
-    // Chuyển trang
+// Chuyển trang
     const handlePageChange = (page) => {
         dispatch({ type: 'SET_CURRENT_PAGE', payload: page });
     };

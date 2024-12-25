@@ -1,13 +1,13 @@
-import {useUserDispatch} from "../context/UserContext.jsx";
-import {useState} from "react";
-import SearchByText from "../components/User/SearchByText.jsx";
+import { useUserDispatch } from "../context/UserContext.jsx";
+import { useState } from "react";
+import SearchByText from "../components/Common/SearchByText.jsx";
 import SearchByRole from "../components/User/SearchByRole.jsx";
-import Spinner from "../components/Spinner.jsx";
+import Spinner from "../components/Common/Spinner.jsx";
 import UserTable from "../components/User/UserTable.jsx";
-import Pagination from "../components/Pagination.jsx";
+import Pagination from "../components/Common/Pagination.jsx";
 import UserModal from "../components/User/UserModal.jsx";
 import useUsers from "../hooks/useUsers.js";
-import {createUser, deleteUser, updateUser} from "../services/User.js";
+import { createUser, deleteUser, updateUser } from "../services/User.js";
 
 function UserManagement() {
     const dispatch = useUserDispatch();
@@ -20,9 +20,8 @@ function UserManagement() {
         dispatch({ type: 'SET_SEARCH_TERM', payload: value });
     };
 
-    const handleRoleChange = (e) => {
-        const value = e.target.value;
-        dispatch({ type: 'SET_ROLE_FILTER', payload: value });
+    const handleRoleChange = (roleName) => {
+        dispatch({ type: 'SET_ROLE_FILTER', payload: roleName });
     };
 
     const handlePageChange = (page) => {
@@ -63,7 +62,9 @@ function UserManagement() {
     return (
         <div>
             <SearchByText searchTerm={searchTerm} onSearchChange={handleSearchChange} />
-            <SearchByRole roles={roles} selectedRole={roleFilter} onRoleChange={handleRoleChange} />
+            {roles && roles.length > 0 && (
+                <SearchByRole roles={roles} selectedRole={roleFilter} onRoleChange={handleRoleChange} />
+            )}
             <div className="mt-8">
                 <button
                     onClick={() => {
@@ -80,15 +81,29 @@ function UserManagement() {
                 <Spinner />
             ) : (
                 <>
-                    <UserTable
-                        users={users}
-                        onEdit={(user) => {
-                            setCurrentUser(user);
-                            setShowModal(true);
-                        }}
-                        onDelete={handleDeleteUser}
-                    />
-                    <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={handlePageChange} />
+                    {users && users.length > 0 ? (
+                        <>
+                            <UserTable
+                                users={users}
+                                onEdit={(user) => {
+                                    setCurrentUser(user);
+                                    setShowModal(true);
+                                }}
+                                onDelete={handleDeleteUser}
+                            />
+                            {totalPages > 1 && (
+                                <Pagination
+                                    totalPages={totalPages}
+                                    currentPage={currentPage}
+                                    onPageChange={handlePageChange}
+                                />
+                            )}
+                        </>
+                    ) : (
+                        <div className="mt-8 text-center text-gray-500">
+                            No users found.
+                        </div>
+                    )}
                 </>
             )}
 
@@ -99,7 +114,7 @@ function UserManagement() {
                 }}
                 user={currentUser}
                 onSubmit={handleSubmitUser}
-                roles={roles}
+                roles={roles || []}
             />
         </div>
     );

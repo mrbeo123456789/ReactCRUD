@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom'; // Used to render nested routes
-import Header from './components/Header';
-import Sidebar from './components/Sidebar';
-import Footer from './components/Footer';
+import Header from '../components/Common/Header.jsx';
+import Sidebar from '../components/Common/Sidebar.jsx';
+import Footer from '../components/Common/Footer.jsx';
 
 function Layout() {
     return (
